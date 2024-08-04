@@ -57,7 +57,7 @@ jobs:
         uses: juliangruber/approve-pull-request-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          number: context.issue.number
+          number: context.payload.pull_request.number
           
         # uses: actions/github-script@v6
         # with:
