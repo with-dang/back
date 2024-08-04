@@ -63,6 +63,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const { context, github } = require('@actions/github');
             const pull_number = context.payload.pull_request.number;
             const { owner, repo } = context.repo;
             await github.rest.pulls.createReview({
