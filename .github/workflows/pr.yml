@@ -66,9 +66,9 @@ jobs:
             const pull_number = context.payload.pull_request.number;
             const { owner, repo } = context.repo;
             await github.rest.pulls.createReview({
-              owner,
-              repo,
-              pull_number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
               event: 'APPROVE',
               body: 'Auto-approved by GitHub Action'
             });
