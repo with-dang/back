@@ -53,7 +53,7 @@ jobs:
           script: |
             cd docker
             docker-compose stop dang
-            docker-compose rm dang
+            docker-compose rm -f dang
             docker-compose build --pull --no-cache dang
             docker-compose up -d dang
 
