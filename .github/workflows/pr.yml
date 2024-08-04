@@ -63,7 +63,6 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { context, github } = require('@actions/github');
             const pull_number = context.payload.pull_request.number;
             const { owner, repo } = context.repo;
             await github.rest.pulls.createReview({
@@ -73,10 +72,3 @@ jobs:
               event: 'APPROVE',
               body: 'Auto-approved by GitHub Action'
             });
-            # const result = await github.rest.pulls.createReview({
-            # owner: context.repo.owner,
-            # repo: context.repo.repo,
-            # pull_number: context.issue.number,
-            # event: 'APPROVE'
-            # })
-            # console.log(result.status)
