@@ -58,7 +58,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const result = await github.pulls.createReview({
+            const result = await github.rest.pulls.createReview({
             owner: context.repo.owner,
             repo: context.repo.repo,
             pull_number: context.issue.number,

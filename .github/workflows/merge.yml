@@ -52,6 +52,8 @@ jobs:
           timeout: 40s  # 30초 기본
           script: |
             cd docker
+            docker-compose stop dang
+            docker-compose rm dang
             docker-compose build --pull --no-cache dang
             docker-compose up -d dang
 
