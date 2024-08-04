@@ -54,14 +54,19 @@ jobs:
 
       - name: Auto approve pull request
         if: needs.build.result == 'success'
-        uses: actions/github-script@v6
+        uses: juliangruber/approve-pull-request-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const result = await github.rest.pulls.createReview({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: context.issue.number,
-            event: 'APPROVE'
-            })
-            console.log(result.status)
+          number: context.issue.number
+          
+        # uses: actions/github-script@v6
+        # with:
+        #   github-token: ${{ secrets.GITHUB_TOKEN }}
+        #   script: |
+        #     const result = await github.rest.pulls.createReview({
+        #     owner: context.repo.owner,
+        #     repo: context.repo.repo,
+        #     pull_number: context.issue.number,
+        #     event: 'APPROVE'
+        #     })
+        #     console.log(result.status)
