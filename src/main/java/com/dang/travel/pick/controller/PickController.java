@@ -13,7 +13,7 @@ import com.dang.travel.pick.service.response.ToursResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/pick")
+@RequestMapping("/v1/pick")
 @RequiredArgsConstructor
 public class PickController {
 	private final PickService pickService;
