@@ -1,4 +1,4 @@
-package com.dang.travel;
+package com.dang.travel.config;
 
 import java.util.List;
 
