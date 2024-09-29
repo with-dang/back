@@ -12,9 +12,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @Table(name = "`order`")
 @NoArgsConstructor
 public class TossPayment {
@@ -24,7 +26,7 @@ public class TossPayment {
 	@Column(nullable = true)
 	private String paymentKey;
 	@Column(nullable = false)
-	private String amount;
+	private Integer amount;
 	@Column(nullable = false, unique = true)
 	private String orderId;
 	@Column(nullable = false)
@@ -40,7 +42,7 @@ public class TossPayment {
 	private String receipt;
 
 	@Builder
-	public TossPayment(String amount, String orderName) {
+	public TossPayment(Integer amount, String orderName) {
 		this.orderId = UUID.randomUUID().toString();
 		this.paymentStatus = PaymentStatus.PENDING;
 		this.amount = amount;
