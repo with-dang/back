@@ -6,13 +6,12 @@ import org.hibernate.annotations.SQLRestriction;
 import com.dang.travel.config.domain.BaseEntity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,13 +30,12 @@ public class Member extends BaseEntity {
 	private Long id;
 
 	@Column(nullable = false)
-	@Embedded
-	private Nickname nickname;
+	private String nickname;
 
 	@Column(nullable = false, unique = true)
 	private String email;
 
-	@Column(nullable = false,length = 128)
+	@Column(nullable = false, length = 128)
 	private String password;
 
 	@Column
@@ -47,5 +45,20 @@ public class Member extends BaseEntity {
 	private String phone;
 
 	private Boolean isDeleted = false;
+
+	// 빌더 패턴을 적용한 생성자
+	@Builder
+	public Member(String nickname, String email, String password, Role role, String phone) {
+		this.nickname = nickname;
+		this.email = email;
+		this.password = password;
+		this.role = role;
+		this.phone = phone;
+	}
+
+	// 회원 탈퇴(삭제) 처리
+	public void delete() {
+		this.isDeleted = true;
+	}
 
 }
