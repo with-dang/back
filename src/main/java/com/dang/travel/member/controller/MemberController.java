@@ -3,19 +3,14 @@ package com.dang.travel.member.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dang.travel.member.domain.Member;
 import com.dang.travel.member.dto.request.SignupReq;
-import com.dang.travel.member.dto.response.AuthRes;
 import com.dang.travel.member.dto.response.MemberInfoRes;
 import com.dang.travel.member.service.MemberService;
 import com.dang.travel.security.sessionauth.domain.CustomUserDetails;
@@ -24,7 +19,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/member")
+@RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
 
@@ -54,6 +49,5 @@ public class MemberController {
 		return ResponseEntity.ok(memberInfoRes);  // 로그인된 사용자 정보 반환
 
 	}
-
 
 }

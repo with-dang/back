@@ -40,9 +40,13 @@ public class SecurityConfig {
 			.httpBasic(AbstractHttpConfigurer::disable)  // 기본 HTTP 인증 비활성화
 			.cors(cors -> cors.configurationSource(corsConfigurationSource()))  // CORS 설정
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/api/auth/login", "/api/auth/check", "/api/member/signup").permitAll()
-				.requestMatchers("/api/auth/logout").authenticated()
+				.requestMatchers("/auth/login", "/auth/check", "/member/signup", "/").permitAll()
+				.requestMatchers("/auth/logout").authenticated()
+				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**",
+					"/swagger-resources/**",
+					"/webjars/**").permitAll()
 				.anyRequest().authenticated()
+
 			)
 			.sessionManagement(session -> session
 				.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // 필요 시 세션 생성
@@ -69,10 +73,10 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000"));  // 프론트엔드 도메인 설정
-		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+		configuration.setAllowedOriginPatterns(Arrays.asList("*")); // 변경된 설정
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"));
 		configuration.setAllowedHeaders(Arrays.asList("*"));
-		configuration.setAllowCredentials(true);  // 세션 쿠키 허용
+		configuration.setAllowCredentials(true);
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
