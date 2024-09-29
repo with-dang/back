@@ -1,9 +1,11 @@
 package com.dang.travel.payment.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dang.travel.payment.service.PaymentService;
@@ -12,12 +14,23 @@ import com.dang.travel.payment.service.dto.response.TossPaymentWidgetResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/payment")
 @RequiredArgsConstructor
 public class PaymentController {
 	private final PaymentService paymentService;
+
+	@Operation(summary = "토스 결제 성공", description = "토스 결제 성공시 호출", tags = {"payment"})
+	@GetMapping("/toss/success")
+	public ResponseEntity<String> tossSuccess(@RequestParam String orderId,
+		@RequestParam String paymentKey,
+		@RequestParam Integer amount) {
+		paymentService.tossSuccess(orderId, paymentKey, amount);
+		return ResponseEntity.ok("success");
+	}
 
 	@Operation(summary = "토스 결제 생성", description = "토스 결제 하는데 필요한 정보 생성", tags = {"payment"})
 	@PostMapping("/toss")

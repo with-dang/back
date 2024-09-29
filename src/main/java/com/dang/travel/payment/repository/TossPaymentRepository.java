@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.dang.travel.payment.domain.TossPayment;
 
 public interface TossPaymentRepository extends JpaRepository<TossPayment, Long> {
+	TossPayment findByOrderId(String orderId);
 }
