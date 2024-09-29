@@ -1,48 +1,52 @@
 package com.dang.travel.security;
 
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.dang.travel.security.sessionauth.handler.CustomLogoutSuccessHandler;
 import com.dang.travel.security.sessionauth.service.CustomUserDetailsService;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
 	private final CustomUserDetailsService customUserDetailsService;
 	private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
+
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-			.csrf(AbstractHttpConfigurer::disable)
-			.formLogin(AbstractHttpConfigurer::disable)  // 폼 로그인을 비활성화
+			.csrf(AbstractHttpConfigurer::disable)  // CSRF 비활성화
+			.formLogin(AbstractHttpConfigurer::disable)  // 폼 로그인 비활성화
 			.httpBasic(AbstractHttpConfigurer::disable)  // 기본 HTTP 인증 비활성화
+			.cors(cors -> cors.configurationSource(corsConfigurationSource()))  // CORS 설정
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/api/auth/login","/api/auth/check", "/api/member/signup").permitAll()
+				.requestMatchers("/api/auth/login", "/api/auth/check", "/api/member/signup").permitAll()
+				.requestMatchers("/api/auth/logout").authenticated()
 				.anyRequest().authenticated()
 			)
-			.exceptionHandling(exception -> exception
-				.authenticationEntryPoint((request, response, authException) -> {
-					response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그인이 필요합니다.");  // 401 Unauthorized 반환
-				})
-				.accessDeniedHandler((request, response, accessDeniedException) -> {
-					response.sendError(HttpServletResponse.SC_FORBIDDEN, "접근 권한이 없습니다.");  // 403 Forbidden 반환
-				})
-			)
 			.sessionManagement(session -> session
-				.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // 필요한 경우에만 세션 생성
+				.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // 필요 시 세션 생성
+				.sessionFixation().changeSessionId()  // 세션 고정 보호
 			)
 			.logout(logout -> logout
 				.logoutUrl("/api/auth/logout")  // 로그아웃 URL 설정
@@ -51,11 +55,11 @@ public class SecurityConfig {
 				.deleteCookies("JSESSIONID")  // JSESSIONID 쿠키 삭제
 				.logoutSuccessHandler(customLogoutSuccessHandler)  // 커스텀 로그아웃 성공 핸들러
 			)
-			.userDetailsService(customUserDetailsService);
+			.userDetailsService(customUserDetailsService)
+			.addFilterBefore(new SecurityContextPersistenceFilter(), BasicAuthenticationFilter.class);
 
 		return http.build();
 	}
-
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -63,7 +67,20 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-		return authConfig.getAuthenticationManager();
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000"));  // 프론트엔드 도메인 설정
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+		configuration.setAllowedHeaders(Arrays.asList("*"));
+		configuration.setAllowCredentials(true);  // 세션 쿠키 허용
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
+
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws
+		Exception {
+		return authenticationConfiguration.getAuthenticationManager();
 	}
 }

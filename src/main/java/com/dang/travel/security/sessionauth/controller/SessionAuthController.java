@@ -1,6 +1,7 @@
 package com.dang.travel.security.sessionauth.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,13 +18,14 @@ import com.dang.travel.member.dto.response.AuthRes;
 import com.dang.travel.security.sessionauth.domain.CustomUserDetails;
 import com.dang.travel.security.sessionauth.dto.LoginReq;
 
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class SessionAuthController {
 
 	private final AuthenticationManager authenticationManager;
@@ -40,19 +42,21 @@ public class SessionAuthController {
 		return ResponseEntity.ok("로그인 성공");
 	}
 
-	@PostMapping("/logout")
-	public ResponseEntity<String> logout() {
-		return ResponseEntity.ok("로그아웃 성공");
-	}
-
-	@PreAuthorize("isAuthenticated()") // 로그인한 사용자만 접근 가능
 	@GetMapping("/check")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<AuthRes> checkAuthentication(@AuthenticationPrincipal CustomUserDetails userDetails) {
+
+		if (userDetails == null) {
+			// 사용자 정보가 없으면 접근 거부 예외를 던짐
+			throw new AccessDeniedException("인증되지 않은 사용자입니다.");
+		}
+		// 인증된 사용자 정보 반환
 		AuthRes authRes = AuthRes.builder()
 			.email(userDetails.getUsername())
 			.nickname(userDetails.getUser().getNickname())
 			.authenticated(true)
 			.build();
+
 		return ResponseEntity.ok(authRes);  // 로그인된 사용자 정보 반환
 	}
 }
