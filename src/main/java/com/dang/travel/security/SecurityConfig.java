@@ -40,8 +40,9 @@ public class SecurityConfig {
 			.httpBasic(AbstractHttpConfigurer::disable)  // 기본 HTTP 인증 비활성화
 			.cors(cors -> cors.configurationSource(corsConfigurationSource()))  // CORS 설정
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/auth/login", "/auth/check", "/member/signup", "/").permitAll()
-				.requestMatchers("/auth/logout").authenticated()
+				.requestMatchers("/v1/auth/login", "/v1/auth/check", "/v1/member/signup",
+					"/", "/v1/product/**").permitAll()
+				.requestMatchers("/v1/auth/logout").authenticated()
 				.requestMatchers("/swagger-ui/**", "/v3/api-docs/**",
 					"/swagger-resources/**",
 					"/webjars/**").permitAll()
