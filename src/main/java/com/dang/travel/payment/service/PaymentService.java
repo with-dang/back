@@ -6,6 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +26,7 @@ import com.dang.travel.payment.repository.TossPaymentRepository;
 import com.dang.travel.payment.service.dto.request.CreateTosspaymentRequest;
 import com.dang.travel.payment.service.dto.response.TossPaymentWidgetResponse;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -87,8 +92,12 @@ public class PaymentService {
 
 	private void processSuccessfulResponse(JsonNode responseBody, TossPayment tossPayment) throws ParseException {
 		if (responseBody != null) {
-			// receipt 필드에 전체 JSON 응답 저장
-			tossPayment.setReceipt(responseBody.toString());
+			// ObjectMapper를 사용하여 JsonNode를 Map<String, Object>로 변환
+			ObjectMapper objectMapper = new ObjectMapper();
+			Map<String, Object> receiptMap = objectMapper.convertValue(responseBody, Map.class);
+
+			// receipt 필드에 변환된 Map 저장
+			tossPayment.setReceipt(receiptMap);
 
 			// 응답에서 필요한 필드 추출
 			String approvedAtStr = responseBody.get("approvedAt").asText();
@@ -135,5 +144,24 @@ public class PaymentService {
 		if (!tossPayment.getAmount().equals(amount)) {
 			throw new IllegalArgumentException("결제 금액이 일치하지 않습니다.");
 		}
+	}
+
+	public Object getPaymentHistory(String orderId) {
+		TossPayment tossPayment = tossPaymentRepository.findByOrderId(orderId);
+		if (tossPayment == null) {
+			throw new IllegalArgumentException("주문 정보가 없습니다.");
+		}
+		return tossPayment.getReceipt();
+	}
+
+	public Map<String, Object> getPaymentHistories() {
+		Map<String, Object> receipts = new HashMap<>();
+		List<Map<String, Object>> receiptList = tossPaymentRepository.findAll()
+			.stream()
+			.map(TossPayment::getReceipt)
+			.filter(Objects::nonNull)
+			.toList();
+		receipts.put("receipts", receiptList);
+		return receipts;
 	}
 }
