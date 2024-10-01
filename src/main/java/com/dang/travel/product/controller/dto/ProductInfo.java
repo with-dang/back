@@ -13,5 +13,10 @@ public class ProductInfo {
 	private Long price;
 	private LocalDateTime closeTime;
 	private Long discountRate;
+	private String address;
+	private String xCoordinate;
+	private String yCoordinate;
+	private Long currentPersonnel;
+	private Long closePersonnel;
 	private String productPicture;
 }
