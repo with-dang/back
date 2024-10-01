@@ -42,6 +42,18 @@ public class Product extends BaseEntity {
 	private LocalDateTime closeTime;
 
 	@Column
+	private String address;
+
+	@Column
+	private String xCoordinate;
+
+	@Column
+	private String yCoordinate;
+
+	@Column(nullable = false, columnDefinition = "bigint default 0")
+	private Long currentPersonnel;
+
+	@Column
 	private Long closePersonnel;
 
 	@Column
