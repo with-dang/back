@@ -27,7 +27,7 @@ public class MemberController {
 	private final MemberService memberService;
 
 	// 이메일 중복 확인 API
-	@GetMapping("/api/member/check-email")
+	@GetMapping("/check/email")
 	public ResponseEntity<String> checkEmail(String email) {
 		memberService.checkEmail(email);  // 중복 여부 확인
 

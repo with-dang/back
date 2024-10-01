@@ -52,7 +52,25 @@ public class ProductService {
 			.build();
 	}
 
+	@Transactional(readOnly = true)
+	public ProductInfo getProductDetail(Long productId) {
+		// 삭제되지 않은 제품을 조회
+		Product product = productRepository.findByIdAndIsDeletedFalseAndCloseTimeAfter(productId, LocalDateTime.now())
+			.orElseThrow(() -> new IllegalArgumentException("해당 제품이 존재하지 않습니다."));
 
-
-
+		// Product 엔티티를 ProductInfo DTO로 변환
+		return ProductInfo.builder()
+			.id(product.getId())
+			.productName(product.getProductName())
+			.price(product.getPrice())
+			.closeTime(product.getCloseTime())
+			.discountRate(product.getDicountRate())
+			.address(product.getAddress())
+			.xCoordinate(product.getXCoordinate())
+			.yCoordinate(product.getYCoordinate())
+			.currentPersonnel(product.getCurrentPersonnel())
+			.closePersonnel(product.getClosePersonnel())
+			.productPicture(product.getProductPicture())
+			.build();
+	}
 }
