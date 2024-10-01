@@ -41,11 +41,13 @@ public class PaymentController {
 	}
 
 	//TODO: 영수증 결과 paymentKey 제거 해야함
+	@Operation(summary = "결제 영수증 여러개 보여주기", description = "결제 영수증 여러개", tags = {"payment"})
 	@GetMapping("/history")
 	public ResponseEntity<?> getPaymentHistory() {
 		return ResponseEntity.ok(paymentService.getPaymentHistories());
 	}
 
+	@Operation(summary = "결제 영수증 하나 보여주기", description = "결제 영수증 한개", tags = {"payment"})
 	@GetMapping("/history/{orderId}")
 	public ResponseEntity<?> getPaymentHistory(@PathVariable String orderId) {
 		return ResponseEntity.ok(paymentService.getPaymentHistory(orderId));
