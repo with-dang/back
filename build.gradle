@@ -44,6 +44,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // json hibernate
+    implementation 'io.hypersistence:hypersistence-utils-hibernate-62:3.7.0'
+    implementation 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations'
 }
 
 checkstyle {

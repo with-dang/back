@@ -2,6 +2,7 @@ package com.dang.travel.payment.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,5 +38,16 @@ public class PaymentController {
 	public ResponseEntity<TossPaymentWidgetResponse> createTossPayment(@RequestBody CreateTosspaymentRequest request) {
 		TossPaymentWidgetResponse response = paymentService.createTossPayment(request);
 		return ResponseEntity.ok(response);
+	}
+
+	//TODO: 영수증 결과 paymentKey 제거 해야함
+	@GetMapping("/history")
+	public ResponseEntity<?> getPaymentHistory() {
+		return ResponseEntity.ok(paymentService.getPaymentHistories());
+	}
+
+	@GetMapping("/history/{orderId}")
+	public ResponseEntity<?> getPaymentHistory(@PathVariable String orderId) {
+		return ResponseEntity.ok(paymentService.getPaymentHistory(orderId));
 	}
 }

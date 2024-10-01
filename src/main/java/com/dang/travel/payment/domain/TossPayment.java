@@ -1,8 +1,12 @@
 package com.dang.travel.payment.domain;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
+import org.hibernate.annotations.Type;
+
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,8 +44,9 @@ public class TossPayment {
 	private Date requestedAt;
 	@Column(nullable = true)
 	private Date approvedAt;
+	@Type(JsonType.class)
 	@Column(columnDefinition = "JSON")
-	private String receipt;
+	private Map<String, Object> receipt;
 
 	@Builder
 	public TossPayment(Integer amount, String orderName) {
