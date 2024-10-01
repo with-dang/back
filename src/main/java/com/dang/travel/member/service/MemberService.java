@@ -22,6 +22,7 @@ public class MemberService {
 	@Transactional
 	public Member registerMember(SignupReq signupRequest) {
 		checkEmail(signupRequest.getEmail());
+		checkPhone(signupRequest.getPhone());
 
 		// Member 빌더 패턴 사용
 		Member member = Member.builder()
@@ -54,9 +55,16 @@ public class MemberService {
 		memberRepository.save(member);
 	}
 
-	private void checkEmail(String email) {
+	public void checkEmail(String email) {
 		if (memberRepository.existsByEmail(email)) {
 			throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+		}
+	}
+
+	// 전화번호 중복 확인
+	private void checkPhone(String phone) {
+		if (memberRepository.existsByPhone(phone)) {
+			throw new IllegalArgumentException("이미 사용 중인 전화번호입니다.");
 		}
 	}
 
