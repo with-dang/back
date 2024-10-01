@@ -26,6 +26,14 @@ public class MemberController {
 
 	private final MemberService memberService;
 
+	// 이메일 중복 확인 API
+	@GetMapping("/check/email")
+	public ResponseEntity<String> checkEmail(String email) {
+		memberService.checkEmail(email);  // 중복 여부 확인
+
+		return ResponseEntity.ok("사용 가능한 이메일입니다.");
+	}
+
 	// 회원 가입
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@Valid @RequestBody SignupReq signupRequest) {
