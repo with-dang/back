@@ -37,6 +37,11 @@ public class ProductService {
 				.price(product.getPrice())
 				.closeTime(product.getCloseTime())
 				.discountRate(product.getDicountRate())
+				.address(product.getAddress())
+				.xCoordinate(product.getXCoordinate())
+				.yCoordinate(product.getYCoordinate())
+				.currentPersonnel(product.getCurrentPersonnel())
+				.closePersonnel(product.getClosePersonnel())
 				.productPicture(product.getProductPicture())
 				.build())
 			.collect(Collectors.toList());
