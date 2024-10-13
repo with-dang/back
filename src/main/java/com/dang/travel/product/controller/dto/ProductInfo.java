@@ -19,4 +19,5 @@ public class ProductInfo {
 	private Long currentPersonnel;
 	private Long closePersonnel;
 	private String productPicture;
+	private String productDetailPicture;
 }

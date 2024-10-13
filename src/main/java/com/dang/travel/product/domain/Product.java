@@ -62,6 +62,9 @@ public class Product extends BaseEntity {
 	@Column
 	private String productPicture;
 
+	@Column
+	private String productDetailPicture;
+
 	private Boolean isDeleted = false;
 
 }
