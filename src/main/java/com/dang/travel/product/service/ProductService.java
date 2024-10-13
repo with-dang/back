@@ -43,6 +43,7 @@ public class ProductService {
 				.currentPersonnel(product.getCurrentPersonnel())
 				.closePersonnel(product.getClosePersonnel())
 				.productPicture(product.getProductPicture())
+				.productDetailPicture(product.getProductDetailPicture())
 				.build())
 			.collect(Collectors.toList());
 
@@ -71,6 +72,7 @@ public class ProductService {
 			.currentPersonnel(product.getCurrentPersonnel())
 			.closePersonnel(product.getClosePersonnel())
 			.productPicture(product.getProductPicture())
+			.productDetailPicture(product.getProductDetailPicture())
 			.build();
 	}
 }
