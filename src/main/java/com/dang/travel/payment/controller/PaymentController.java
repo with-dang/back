@@ -55,4 +55,10 @@ public class PaymentController {
 	public ResponseEntity<?> getPaymentHistory(@PathVariable String orderId) {
 		return ResponseEntity.ok(paymentService.getPaymentHistory(orderId));
 	}
+
+	@Operation(summary = "결제 내역 상태", description = "수령전 / 공구 확정/ 공구 실패", tags = {"payment"})
+	@GetMapping("/status")
+	public ResponseEntity<?> getPaymentStatus(@AuthenticationPrincipal CustomUserDetails userDetails) {
+		return ResponseEntity.ok(paymentService.getPaymentStatus(userDetails.getUser()));
+	}
 }
