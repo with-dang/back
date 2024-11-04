@@ -25,6 +25,7 @@ import com.dang.travel.payment.domain.PaymentStatus;
 import com.dang.travel.payment.domain.TossPayment;
 import com.dang.travel.payment.repository.TossPaymentRepository;
 import com.dang.travel.payment.service.dto.request.CreateTosspaymentRequest;
+import com.dang.travel.payment.service.dto.response.PaymentStats;
 import com.dang.travel.payment.service.dto.response.TossPaymentWidgetResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -164,5 +165,28 @@ public class PaymentService {
 			.toList();
 		receipts.put("receipts", receiptList);
 		return receipts;
+	}
+
+	public PaymentStats getPaymentStatus(Member user) {
+		List<TossPayment> tossPayments = tossPaymentRepository.findByMember(user);
+		long pending = 0;
+		long success = 0;
+		long fail = 0;
+		for (TossPayment tossPayment : tossPayments) {
+			switch (tossPayment.getPaymentStatus()) {
+				case SUCCESS:
+					// 현재 시각보다 승인 시각이 이후면 success
+					if (tossPayment.getApprovedAt().after(new Date())) {
+						success++;
+					} else {
+						pending++;
+					}
+					break;
+				case FAIL:
+					fail++;
+					break;
+			}
+		}
+		return new PaymentStats(pending, success, fail);
 	}
 }
