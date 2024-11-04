@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.dang.travel.member.domain.Member;
 import com.dang.travel.payment.domain.PaymentStatus;
 import com.dang.travel.payment.domain.TossPayment;
 import com.dang.travel.payment.repository.TossPaymentRepository;
@@ -47,8 +48,8 @@ public class PaymentService {
 	private String tossUrl;
 
 	// TODO: 유저 연동시 변경 필요
-	public TossPaymentWidgetResponse createTossPayment(CreateTosspaymentRequest request) {
-		TossPayment tossPayment = request.toEntity("테스트 주문");
+	public TossPaymentWidgetResponse createTossPayment(CreateTosspaymentRequest request, Member user) {
+		TossPayment tossPayment = request.toEntity("테스트 주문", user);
 		tossPaymentRepository.save(tossPayment);
 		return TossPaymentWidgetResponse.builder()
 			.orderId(tossPayment.getOrderId())
@@ -154,9 +155,9 @@ public class PaymentService {
 		return tossPayment.getReceipt();
 	}
 
-	public Map<String, Object> getPaymentHistories() {
+	public Map<String, Object> getPaymentHistories(Member user) {
 		Map<String, Object> receipts = new HashMap<>();
-		List<Map<String, Object>> receiptList = tossPaymentRepository.findAll()
+		List<Map<String, Object>> receiptList = tossPaymentRepository.findByMember(user)
 			.stream()
 			.map(TossPayment::getReceipt)
 			.filter(Objects::nonNull)

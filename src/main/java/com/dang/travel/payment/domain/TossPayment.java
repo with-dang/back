@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import org.hibernate.annotations.Type;
 
+import com.dang.travel.member.domain.Member;
+
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,6 +16,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,11 +51,15 @@ public class TossPayment {
 	@Column(columnDefinition = "JSON")
 	private Map<String, Object> receipt;
 
+	@ManyToOne
+	private Member member;
+
 	@Builder
-	public TossPayment(Integer amount, String orderName) {
+	public TossPayment(Integer amount, String orderName, Member member) {
 		this.orderId = UUID.randomUUID().toString();
 		this.paymentStatus = PaymentStatus.PENDING;
 		this.amount = amount;
 		this.orderName = orderName;
+		this.member = member;
 	}
 }

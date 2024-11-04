@@ -17,6 +17,10 @@ public class CustomUserDetails implements UserDetails {
 
 	private final Member user; // 실제 사용자 정보 저장
 
+	public Member getUser() {
+		return this.user;
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return List.of(() -> "USER");  // 권한을 여기서 정의 가능
