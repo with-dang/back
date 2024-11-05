@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.hibernate.annotations.Type;
 
 import com.dang.travel.member.domain.Member;
+import com.dang.travel.product.domain.Product;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
@@ -53,13 +54,16 @@ public class TossPayment {
 
 	@ManyToOne
 	private Member member;
+	@ManyToOne
+	private Product product;
 
 	@Builder
-	public TossPayment(Integer amount, String orderName, Member member) {
+	public TossPayment(Integer amount, String orderName, Member member, Product product) {
 		this.orderId = UUID.randomUUID().toString();
 		this.paymentStatus = PaymentStatus.PENDING;
 		this.amount = amount;
 		this.orderName = orderName;
 		this.member = member;
+		this.product = product;
 	}
 }

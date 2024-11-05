@@ -1,20 +1,22 @@
 package com.dang.travel.product.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
 import com.dang.travel.config.domain.BaseEntity;
-import com.dang.travel.member.domain.Role;
+import com.dang.travel.payment.domain.TossPayment;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -64,6 +66,9 @@ public class Product extends BaseEntity {
 
 	@Column
 	private String productDetailPicture;
+
+	@OneToMany(mappedBy = "product")
+	private List<TossPayment> tossPayments = new ArrayList<>();
 
 	private Boolean isDeleted = false;
 

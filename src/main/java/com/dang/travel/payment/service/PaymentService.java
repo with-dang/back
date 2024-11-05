@@ -27,6 +27,8 @@ import com.dang.travel.payment.repository.TossPaymentRepository;
 import com.dang.travel.payment.service.dto.request.CreateTosspaymentRequest;
 import com.dang.travel.payment.service.dto.response.PaymentStats;
 import com.dang.travel.payment.service.dto.response.TossPaymentWidgetResponse;
+import com.dang.travel.product.domain.Product;
+import com.dang.travel.product.repository.ProductRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -39,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PaymentService {
 	private final TossPaymentRepository tossPaymentRepository;
+	private final ProductRepository productRepository;
 	@Value("${toss.api.secret.key}")
 	private String tossSecretKey;
 	@Value("${toss.api.success.url}")
@@ -50,7 +53,8 @@ public class PaymentService {
 
 	// TODO: 유저 연동시 변경 필요
 	public TossPaymentWidgetResponse createTossPayment(CreateTosspaymentRequest request, Member user) {
-		TossPayment tossPayment = request.toEntity("테스트 주문", user);
+		Product product = productRepository.getReferenceById(request.productId());
+		TossPayment tossPayment = request.toEntity("테스트 주문", user, product);
 		tossPaymentRepository.save(tossPayment);
 		return TossPaymentWidgetResponse.builder()
 			.orderId(tossPayment.getOrderId())
